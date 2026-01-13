@@ -142,5 +142,13 @@ module.exports = {
 				'n8n-nodes-base/node-param-type-options-password-missing': 'error',
 			},
 		},
+		{
+			// AI Tools grouped in tools/ directory - allow shared directory structure
+			files: ['./nodes/**/tools/*.ts'],
+			rules: {
+				'n8n-nodes-base/node-dirname-against-convention': 'off',
+				'n8n-nodes-base/node-filename-against-convention': 'off',
+			},
+		},
 	],
 };
