@@ -4,8 +4,10 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 	IDataObject,
+	ILoadOptionsFunctions,
+	INodePropertyOptions,
 } from 'n8n-workflow';
-import { NodeConnectionTypes } from 'n8n-workflow';
+import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 import { configureNeon } from '../transport';
 import type { NeonNodeCredentials } from '../helpers/interface';
 import {
@@ -39,7 +41,10 @@ export class NeonUpdateDataTool implements INodeType {
 		{
 			displayName: 'Schema',
 			name: 'schema',
-			type: 'string',
+			type: 'options',
+			typeOptions: {
+				loadOptionsMethod: 'getSchemas',
+			},
 			default: 'public',
 			required: true,
 			description: 'The database schema containing the table (usually "public")',
@@ -47,7 +52,10 @@ export class NeonUpdateDataTool implements INodeType {
 		{
 			displayName: 'Table',
 			name: 'table',
-			type: 'string',
+			type: 'options',
+			typeOptions: {
+				loadOptionsMethod: 'getTables',
+			},
 			default: '={{ $fromAI("table", "The name of the database table to update") }}',
 			required: true,
 			description: 'The name of the table to update',
@@ -82,6 +90,65 @@ export class NeonUpdateDataTool implements INodeType {
 			},
 		],
 	};
+
+	methods = {
+		loadOptions: {
+			async getSchemas(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+					try {
+						const credentials = (await this.getCredentials('neonApi')) as NeonNodeCredentials;
+						const { db } = await configureNeon(credentials, {});
+
+						const query = `
+							SELECT schema_name
+							FROM information_schema.schemata
+							WHERE schema_name NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
+							ORDER BY schema_name;
+						`;
+
+						const schemas = await db.any(query);
+
+						return schemas.map((schema: { schema_name: string }) => ({
+							name: schema.schema_name,
+							value: schema.schema_name,
+						}));
+					} catch (error) {
+						throw new NodeOperationError(
+							this.getNode(),
+							`Failed to load schemas: ${(error as Error).message}`,
+						);
+					}
+				},
+
+				async getTables(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+					try {
+						const credentials = (await this.getCredentials('neonApi')) as NeonNodeCredentials;
+						const { db } = await configureNeon(credentials, {});
+
+						const schema = this.getNodeParameter('schema', 'public') as string;
+
+						const query = `
+							SELECT table_name
+							FROM information_schema.tables
+							WHERE table_schema = $1
+							AND table_type = 'BASE TABLE'
+							ORDER BY table_name;
+						`;
+
+						const tables = await db.any(query, [schema]);
+
+						return tables.map((table: { table_name: string }) => ({
+							name: table.table_name,
+							value: table.table_name,
+						}));
+					} catch (error) {
+						throw new NodeOperationError(
+							this.getNode(),
+							`Failed to load tables: ${(error as Error).message}`,
+						);
+					}
+				},
+			},
+		};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const startTime = Date.now();
