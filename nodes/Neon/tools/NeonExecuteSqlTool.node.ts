@@ -5,7 +5,7 @@ import type {
 	INodeTypeDescription,
 	IDataObject,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
+import { NodeConnectionTypes } from 'n8n-workflow';
 import { configureNeon } from '../transport';
 import type { NeonNodeCredentials } from '../helpers/interface';
 import {
@@ -28,8 +28,8 @@ export class NeonExecuteSqlTool implements INodeType {
 		defaults: {
 			name: 'Neon Execute SQL',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.AiTool],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.AiTool],
 		credentials: [
 			{
 				name: 'neonApi',
@@ -37,28 +37,28 @@ export class NeonExecuteSqlTool implements INodeType {
 			},
 		],
 		properties: [
-			{
-				displayName: 'Query',
-				name: 'query',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'SQL query to execute. Use $1, $2, etc. for parameter placeholders. Example: SELECT * FROM users WHERE ID = $1',
-				placeholder: 'SELECT * FROM users WHERE id = $1 AND status = $2',
-				typeOptions: {
-					rows: 10,
-				},
+		{
+			displayName: 'Query',
+			name: 'query',
+			type: 'string',
+			default: '={{ $fromAI("query", "SQL query to execute. Use $1, $2, etc. for parameter placeholders") }}',
+			required: true,
+			description: 'SQL query to execute. Use $1, $2, etc. for parameter placeholders. Example: SELECT * FROM users WHERE ID = $1',
+			placeholder: 'SELECT * FROM users WHERE id = $1 AND status = $2',
+			typeOptions: {
+				rows: 10,
 			},
-			{
-				displayName: 'Parameters',
-				name: 'parameters',
-				type: 'json',
-				default: '[]',
-				description: 'JSON array of parameter values to bind to the query placeholders. Example: [123, "active"].',
-				typeOptions: {
-					rows: 5,
-				},
+		},
+		{
+			displayName: 'Parameters',
+			name: 'parameters',
+			type: 'json',
+			default: '={{ $fromAI("parameters", "JSON array of parameter values to bind to query placeholders", "[]") }}',
+			description: 'JSON array of parameter values to bind to the query placeholders. Example: [123, "active"].',
+			typeOptions: {
+				rows: 5,
 			},
+		},
 			{
 				displayName: 'Query Mode',
 				name: 'queryMode',

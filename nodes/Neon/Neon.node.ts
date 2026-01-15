@@ -4,7 +4,7 @@ import type {
 	IExecuteFunctions,
 	INodeExecutionData,
 } from 'n8n-workflow';
-import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
+import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 import { configureNeon } from './transport';
 import type { NeonNodeCredentials, NeonNodeOptions } from './helpers/interface';
 import { execute as executeQueryOperation } from './actions/operations/executeQuery.operation';
@@ -29,8 +29,8 @@ export class Neon implements INodeType {
 		defaults: {
 			name: 'Neon',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		usableAsTool: true,
 		credentials: [
 			{

@@ -4,7 +4,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
+import { NodeConnectionTypes } from 'n8n-workflow';
 import { configureNeon } from '../transport';
 import type { NeonNodeCredentials } from '../helpers/interface';
 import {
@@ -26,8 +26,8 @@ export class NeonDeleteDataTool implements INodeType {
 		defaults: {
 			name: 'Neon Delete Data',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.AiTool],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.AiTool],
 		credentials: [
 			{
 				name: 'neonApi',
@@ -35,23 +35,23 @@ export class NeonDeleteDataTool implements INodeType {
 			},
 		],
 		properties: [
-			{
-				displayName: 'Schema',
-				name: 'schema',
-				type: 'string',
-				default: 'public',
-				required: true,
-				description: 'The database schema containing the table (usually "public")',
-			},
-			{
-				displayName: 'Table',
-				name: 'table',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The name of the table to delete from',
-				placeholder: 'users',
-			},
+		{
+			displayName: 'Schema',
+			name: 'schema',
+			type: 'string',
+			default: 'public',
+			required: true,
+			description: 'The database schema containing the table (usually "public")',
+		},
+		{
+			displayName: 'Table',
+			name: 'table',
+			type: 'string',
+			default: '={{ $fromAI("table", "The name of the database table to delete from") }}',
+			required: true,
+			description: 'The name of the table to delete from',
+			placeholder: 'users',
+		},
 			{
 				displayName: 'Mode',
 				name: 'mode',
@@ -76,20 +76,20 @@ export class NeonDeleteDataTool implements INodeType {
 				default: 'delete',
 				description: 'The type of deletion to perform',
 			},
-			{
-				displayName: 'Where Conditions',
-				name: 'whereConditions',
-				type: 'string',
-				default: '',
-				description:
-					'SQL WHERE clause to specify which rows to delete. Required for "Delete Rows" mode.',
-				placeholder: "age < 18 OR status = 'inactive'",
-				displayOptions: {
-					show: {
-						mode: ['delete'],
-					},
+		{
+			displayName: 'Where Conditions',
+			name: 'whereConditions',
+			type: 'string',
+			default: '={{ $fromAI("whereConditions", "SQL WHERE clause to specify which rows to delete") }}',
+			description:
+				'SQL WHERE clause to specify which rows to delete. Required for "Delete Rows" mode.',
+			placeholder: "age < 18 OR status = 'inactive'",
+			displayOptions: {
+				show: {
+					mode: ['delete'],
 				},
 			},
+		},
 			{
 				displayName: 'Confirm Destructive Operation',
 				name: 'confirmDestructive',

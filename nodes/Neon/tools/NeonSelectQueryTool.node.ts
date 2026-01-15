@@ -4,7 +4,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
+import { NodeConnectionTypes } from 'n8n-workflow';
 import { configureNeon } from '../transport';
 import type { NeonNodeCredentials } from '../helpers/interface';
 import { formatQueryResponse, formatToolError, measureExecutionTime } from './shared/formatters';
@@ -27,8 +27,8 @@ export class NeonSelectQueryTool implements INodeType {
 		defaults: {
 			name: 'Neon Select Query',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.AiTool],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.AiTool],
 		credentials: [
 			{
 				name: 'neonApi',
@@ -36,39 +36,39 @@ export class NeonSelectQueryTool implements INodeType {
 			},
 		],
 		properties: [
-			{
-				displayName: 'Schema',
-				name: 'schema',
-				type: 'string',
-				default: 'public',
-				required: true,
-				description: 'The database schema containing the table (usually "public")',
-			},
-			{
-				displayName: 'Table',
-				name: 'table',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The name of the table to query',
-				placeholder: 'users',
-			},
-			{
-				displayName: 'Columns',
-				name: 'columns',
-				type: 'string',
-				default: '*',
-				description: 'Comma-separated list of column names to return. Use "*" for all columns.',
-				placeholder: 'ID, name, email, created_at',
-			},
-			{
-				displayName: 'Where Conditions',
-				name: 'whereConditions',
-				type: 'string',
-				default: '',
-				description: 'SQL WHERE clause conditions to filter results. Example: age > 18 AND status = \'active\'.',
-				placeholder: "age > 18 AND status = 'active'",
-			},
+		{
+			displayName: 'Schema',
+			name: 'schema',
+			type: 'string',
+			default: 'public',
+			required: true,
+			description: 'The database schema containing the table (usually "public")',
+		},
+		{
+			displayName: 'Table',
+			name: 'table',
+			type: 'string',
+			default: '={{ $fromAI("table", "The name of the database table to query") }}',
+			required: true,
+			description: 'The name of the table to query',
+			placeholder: 'users',
+		},
+		{
+			displayName: 'Columns',
+			name: 'columns',
+			type: 'string',
+			default: '={{ $fromAI("columns", "Comma-separated column names or * for all columns", "*") }}',
+			description: 'Comma-separated list of column names to return. Use "*" for all columns.',
+			placeholder: 'ID, name, email, created_at',
+		},
+		{
+			displayName: 'Where Conditions',
+			name: 'whereConditions',
+			type: 'string',
+			default: '={{ $fromAI("whereConditions", "SQL WHERE clause conditions to filter results", "") }}',
+			description: 'SQL WHERE clause conditions to filter results. Example: age > 18 AND status = \'active\'.',
+			placeholder: "age > 18 AND status = 'active'",
+		},
 			{
 				displayName: 'Sort By',
 				name: 'sortBy',

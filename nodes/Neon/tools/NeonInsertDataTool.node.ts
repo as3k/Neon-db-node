@@ -5,7 +5,7 @@ import type {
 	INodeTypeDescription,
 	IDataObject,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
+import { NodeConnectionTypes } from 'n8n-workflow';
 import { configureNeon } from '../transport';
 import type { NeonNodeCredentials } from '../helpers/interface';
 import {
@@ -27,8 +27,8 @@ export class NeonInsertDataTool implements INodeType {
 		defaults: {
 			name: 'Neon Insert Data',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.AiTool],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.AiTool],
 		credentials: [
 			{
 				name: 'neonApi',
@@ -36,34 +36,34 @@ export class NeonInsertDataTool implements INodeType {
 			},
 		],
 		properties: [
-			{
-				displayName: 'Schema',
-				name: 'schema',
-				type: 'string',
-				default: 'public',
-				required: true,
-				description: 'The database schema containing the table (usually "public")',
+		{
+			displayName: 'Schema',
+			name: 'schema',
+			type: 'string',
+			default: 'public',
+			required: true,
+			description: 'The database schema containing the table (usually "public")',
+		},
+		{
+			displayName: 'Table',
+			name: 'table',
+			type: 'string',
+			default: '={{ $fromAI("table", "The name of the database table to insert data into") }}',
+			required: true,
+			description: 'The name of the table to insert into',
+			placeholder: 'users',
+		},
+		{
+			displayName: 'Data',
+			name: 'data',
+			type: 'json',
+			default: '={{ $fromAI("data", "JSON object or array of objects to insert into the table") }}',
+			required: true,
+			description: 'JSON object or array of objects to insert. Example: {"name": "John", "email": "john@example.com"}.',
+			typeOptions: {
+				rows: 10,
 			},
-			{
-				displayName: 'Table',
-				name: 'table',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The name of the table to insert into',
-				placeholder: 'users',
-			},
-			{
-				displayName: 'Data',
-				name: 'data',
-				type: 'json',
-				default: '{}',
-				required: true,
-				description: 'JSON object or array of objects to insert. Example: {"name": "John", "email": "john@example.com"}.',
-				typeOptions: {
-					rows: 10,
-				},
-			},
+		},
 			{
 				displayName: 'Skip On Conflict',
 				name: 'skipOnConflict',

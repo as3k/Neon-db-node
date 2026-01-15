@@ -5,7 +5,7 @@ import type {
 	INodeTypeDescription,
 	IDataObject,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
+import { NodeConnectionTypes } from 'n8n-workflow';
 import { configureNeon } from '../transport';
 import type { NeonNodeCredentials } from '../helpers/interface';
 import {
@@ -27,8 +27,8 @@ export class NeonUpdateDataTool implements INodeType {
 		defaults: {
 			name: 'Neon Update Data',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.AiTool],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.AiTool],
 		credentials: [
 			{
 				name: 'neonApi',
@@ -36,43 +36,43 @@ export class NeonUpdateDataTool implements INodeType {
 			},
 		],
 		properties: [
-			{
-				displayName: 'Schema',
-				name: 'schema',
-				type: 'string',
-				default: 'public',
-				required: true,
-				description: 'The database schema containing the table (usually "public")',
+		{
+			displayName: 'Schema',
+			name: 'schema',
+			type: 'string',
+			default: 'public',
+			required: true,
+			description: 'The database schema containing the table (usually "public")',
+		},
+		{
+			displayName: 'Table',
+			name: 'table',
+			type: 'string',
+			default: '={{ $fromAI("table", "The name of the database table to update") }}',
+			required: true,
+			description: 'The name of the table to update',
+			placeholder: 'users',
+		},
+		{
+			displayName: 'Values',
+			name: 'values',
+			type: 'json',
+			default: '={{ $fromAI("values", "JSON object with column names and new values to update") }}',
+			required: true,
+			description: 'JSON object with column names and new values. Example: {"name": "John Updated", "status": "active"}.',
+			typeOptions: {
+				rows: 5,
 			},
-			{
-				displayName: 'Table',
-				name: 'table',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The name of the table to update',
-				placeholder: 'users',
-			},
-			{
-				displayName: 'Values',
-				name: 'values',
-				type: 'json',
-				default: '{}',
-				required: true,
-				description: 'JSON object with column names and new values. Example: {"name": "John Updated", "status": "active"}.',
-				typeOptions: {
-					rows: 5,
-				},
-			},
-			{
-				displayName: 'Where Conditions',
-				name: 'whereConditions',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'SQL WHERE clause to specify which rows to update. Example: ID = 123 OR email = \'user@example.com\'.',
-				placeholder: 'ID = 123',
-			},
+		},
+		{
+			displayName: 'Where Conditions',
+			name: 'whereConditions',
+			type: 'string',
+			default: '={{ $fromAI("whereConditions", "SQL WHERE clause to specify which rows to update") }}',
+			required: true,
+			description: 'SQL WHERE clause to specify which rows to update. Example: ID = 123 OR email = \'user@example.com\'.',
+			placeholder: 'ID = 123',
+		},
 			{
 				displayName: 'Return Data',
 				name: 'returnData',
