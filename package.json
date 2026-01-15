@@ -1,6 +1,6 @@
 {
-	"name": "n8n-nodes-neon",
-	"version": "0.2.0",
+	"name": "@iamasek/n8n-nodes-neon",
+	"version": "0.1.0",
 	"description": "n8n node to connect to Neon Postgres database.",
 	"keywords": [
 		"n8n-community-node-package"
