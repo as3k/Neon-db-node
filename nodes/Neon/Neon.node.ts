@@ -41,9 +41,20 @@ export class Neon implements INodeType {
 		],
 		properties: [
 			{
+				displayName: 'Description',
+				name: 'toolDescription',
+				type: 'string',
+				default: 'Interact with Neon Postgres database: query, insert, update, delete data',
+				required: true,
+				typeOptions: {
+					rows: 2,
+				},
+				description: 'Explain to the LLM what this tool does. A good, specific description allows LLMs to produce expected results much more often.',
+			},
+			{
 				displayName: 'Resource',
 				name: 'resource',
-				type: 'options',
+				type: 'hidden',
 				noDataExpression: true,
 				options: [
 					{
