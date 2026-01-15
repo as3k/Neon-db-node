@@ -56,18 +56,21 @@ export class NeonInsertDataTool implements INodeType {
 			typeOptions: {
 				loadOptionsMethod: 'getTables',
 			},
-			default: '={{ $fromAI("table", "The name of the database table to insert data into") }}',
+			default: '',
 			required: true,
 			description: 'The name of the table to insert into',
 			placeholder: 'users',
+			hint: 'The name of the database table to insert data into',
 		},
 		{
 			displayName: 'Data',
 			name: 'data',
 			type: 'json',
-			default: '={{ $fromAI("data", "JSON object or array of objects to insert into the table") }}',
+			default: '',
 			required: true,
 			description: 'JSON object or array of objects to insert. Example: {"name": "John", "email": "john@example.com"}.',
+			placeholder: '{"name": "John", "email": "john@example.com"}',
+			hint: 'JSON object or array of objects to insert into the table',
 			typeOptions: {
 				rows: 10,
 			},

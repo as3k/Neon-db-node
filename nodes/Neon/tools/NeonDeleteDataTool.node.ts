@@ -55,10 +55,11 @@ export class NeonDeleteDataTool implements INodeType {
 			typeOptions: {
 				loadOptionsMethod: 'getTables',
 			},
-			default: '={{ $fromAI("table", "The name of the database table to delete from") }}',
+			default: '',
 			required: true,
 			description: 'The name of the table to delete from',
 			placeholder: 'users',
+			hint: 'The name of the database table to delete from',
 		},
 			{
 				displayName: 'Mode',
@@ -88,10 +89,11 @@ export class NeonDeleteDataTool implements INodeType {
 			displayName: 'Where Conditions',
 			name: 'whereConditions',
 			type: 'string',
-			default: '={{ $fromAI("whereConditions", "SQL WHERE clause to specify which rows to delete") }}',
+			default: '',
 			description:
 				'SQL WHERE clause to specify which rows to delete. Required for "Delete Rows" mode.',
 			placeholder: "age < 18 OR status = 'inactive'",
+			hint: 'SQL WHERE clause to specify which rows to delete',
 			displayOptions: {
 				show: {
 					mode: ['delete'],

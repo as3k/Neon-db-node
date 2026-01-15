@@ -44,7 +44,8 @@
 			"dist/nodes/Neon/tools/NeonInsertDataTool.node.js",
 			"dist/nodes/Neon/tools/NeonUpdateDataTool.node.js",
 			"dist/nodes/Neon/tools/NeonDeleteDataTool.node.js",
-			"dist/nodes/Neon/tools/NeonExecuteSqlTool.node.js"
+			"dist/nodes/Neon/tools/NeonExecuteSqlTool.node.js",
+			"dist/nodes/Neon/tools/NeonGetTableSchemaTool.node.js"
 		]
 	},
 	"devDependencies": {
